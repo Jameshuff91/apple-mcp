@@ -6,9 +6,9 @@ import subprocess
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from mac_personal_mcp.config import ALLOW_NEW_RECIPIENTS
-from mac_personal_mcp.contacts import get_contact, resolve_handle
-from mac_personal_mcp.utils import (
+from apple_mcp.config import ALLOW_NEW_RECIPIENTS
+from apple_mcp.contacts import get_contact, resolve_handle
+from apple_mcp.utils import (
     applescript_string,
     apple_messages_date_to_datetime,
     datetime_to_apple_messages_ns,
@@ -476,7 +476,7 @@ def send_message(contact_or_phone: str, message: str) -> str:
         if not known:
             return (
                 f"Refused: no existing conversation with {target}. Sending to new "
-                "recipients is disabled (set MAC_MCP_ALLOW_NEW_RECIPIENTS=1 to allow)."
+                "recipients is disabled (set APPLE_MCP_ALLOW_NEW_RECIPIENTS=1 to allow)."
             )
 
     # Disclose that the message was written with AI

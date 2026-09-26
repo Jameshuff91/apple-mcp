@@ -12,8 +12,8 @@ import subprocess
 from glob import glob
 from pathlib import Path
 
-from mac_personal_mcp.config import ALIASES_FILE
-from mac_personal_mcp.utils import applescript_string, normalize_phone, strip_apple_label
+from apple_mcp.config import ALIASES_FILE
+from apple_mcp.utils import applescript_string, normalize_phone, strip_apple_label
 
 MESSAGES_DB = Path.home() / "Library" / "Messages" / "chat.db"
 

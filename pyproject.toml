@@ -1,5 +1,5 @@
 [project]
-name = "mac-personal-mcp"
+name = "apple-mcp"
 version = "0.1.0"
 description = "MCP server for iMessage, Apple Notes, and Contacts on macOS. Read-only by default."
 readme = "README.md"
@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 [project.scripts]
-mac-personal-mcp = "mac_personal_mcp.server:main"
+apple-mcp = "apple_mcp.server:main"
 
 [dependency-groups]
 dev = ["pytest>=8", "pyright>=1.1.390"]
@@ -26,7 +26,7 @@ requires = ["hatchling>=1.26"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mac_personal_mcp"]
+packages = ["src/apple_mcp"]
 
 [tool.pyright]
 include = ["src", "tests"]

@@ -1,5 +1,5 @@
 """
-mac-personal-mcp server
+apple-mcp server
 
 Exposes iMessage, Apple Notes, and Contacts on macOS as MCP tools.
 
@@ -14,20 +14,20 @@ from typing import Any
 
 from fastmcp import FastMCP
 
-from mac_personal_mcp.config import (
+from apple_mcp.config import (
     ALLOW_NEW_RECIPIENTS,
     ENABLE_SEND,
     ENABLE_SHORTCUTS,
     ENABLE_WRITES,
 )
-from mac_personal_mcp.contacts import (
+from apple_mcp.contacts import (
     add_contact,
     get_contact,
     list_unresolved_handles,
     save_alias,
     search_contacts,
 )
-from mac_personal_mcp.messages import (
+from apple_mcp.messages import (
     find_links,
     get_conversation,
     get_unread_count,
@@ -35,7 +35,7 @@ from mac_personal_mcp.messages import (
     search_messages,
     send_message,
 )
-from mac_personal_mcp.notes import (
+from apple_mcp.notes import (
     add_checklist_item,
     create_note,
     create_note_with_checklist,
@@ -46,18 +46,18 @@ from mac_personal_mcp.notes import (
     set_checklist_done,
     update_note,
 )
-from mac_personal_mcp.shortcuts import (
+from apple_mcp.shortcuts import (
     create_shortcut,
     list_shortcuts,
     run_shortcut,
 )
-from mac_personal_mcp.utils import wrap_untrusted
+from apple_mcp.utils import wrap_untrusted
 
 # stdio transport uses stdout for protocol messages; logging goes to stderr.
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-mcp = FastMCP("mac-personal")
+mcp = FastMCP("apple")
 
 READ_ONLY: dict[str, Any] = {"readOnlyHint": True, "openWorldHint": False}
 LOCAL_WRITE: dict[str, Any] = {"readOnlyHint": False, "destructiveHint": False, "openWorldHint": False}
@@ -243,7 +243,7 @@ def contacts_add(
 def contacts_save_alias(handle: str, name: str) -> str:
     """Save a phone/email to name mapping for message display without creating a full contact.
 
-    Stored in ~/.config/mac-personal-mcp/aliases.json.
+    Stored in ~/.config/apple-mcp/aliases.json.
 
     Args:
         handle: Phone number or email address from iMessage
@@ -448,7 +448,7 @@ def shortcuts_create(name: str, actions_json: str) -> str:
 
 def main() -> None:
     logger.info(
-        "mac-personal-mcp starting: writes=%s send=%s (new recipients=%s) shortcuts=%s",
+        "apple-mcp starting: writes=%s send=%s (new recipients=%s) shortcuts=%s",
         ENABLE_WRITES,
         ENABLE_SEND,
         ALLOW_NEW_RECIPIENTS,

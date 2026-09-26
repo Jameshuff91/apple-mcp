@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from mac_personal_mcp import notes
-from mac_personal_mcp.messages import extract_message_text
-from mac_personal_mcp.utils import normalize_phone
+from apple_mcp import notes
+from apple_mcp.messages import extract_message_text
+from apple_mcp.utils import normalize_phone
 
 
 def test_normalize_phone() -> None:

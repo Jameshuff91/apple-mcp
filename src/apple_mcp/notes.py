@@ -7,7 +7,7 @@ import sqlite3
 import subprocess
 from pathlib import Path
 
-from mac_personal_mcp.utils import applescript_string
+from apple_mcp.utils import applescript_string
 
 NOTES_DB = (
     Path.home()

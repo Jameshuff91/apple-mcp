@@ -1,4 +1,4 @@
-# mac-personal-mcp
+# apple-mcp
 
 An [MCP](https://modelcontextprotocol.io) server that lets Claude (or any MCP client) search your iMessages, read your Apple Notes (including checklist state), and look up your Contacts on macOS.
 
@@ -10,10 +10,10 @@ It is **read-only by default**. Tools that write, send, or run automation must b
 
 | Area | Always on (read-only) | Opt-in |
 |---|---|---|
-| Messages | `imessage_search`, `imessage_read`, `imessage_conversations`, `imessage_links`, `imessage_unread` | `imessage_send` (`MAC_MCP_ENABLE_SEND`) |
-| Notes | `notes_list`, `notes_list_folders`, `notes_read`, `notes_read_checklist` | `notes_create`, `notes_update`, `notes_add_checklist_item`, `notes_toggle_checklist`, `notes_create_checklist` (`MAC_MCP_ENABLE_WRITES`) |
-| Contacts | `contacts_search`, `contacts_get`, `contacts_unresolved` | `contacts_add`, `contacts_save_alias` (`MAC_MCP_ENABLE_WRITES`) |
-| Shortcuts | none | `shortcuts_list`, `shortcuts_run`, `shortcuts_create` (`MAC_MCP_ENABLE_SHORTCUTS`) |
+| Messages | `imessage_search`, `imessage_read`, `imessage_conversations`, `imessage_links`, `imessage_unread` | `imessage_send` (`APPLE_MCP_ENABLE_SEND`) |
+| Notes | `notes_list`, `notes_list_folders`, `notes_read`, `notes_read_checklist` | `notes_create`, `notes_update`, `notes_add_checklist_item`, `notes_toggle_checklist`, `notes_create_checklist` (`APPLE_MCP_ENABLE_WRITES`) |
+| Contacts | `contacts_search`, `contacts_get`, `contacts_unresolved` | `contacts_add`, `contacts_save_alias` (`APPLE_MCP_ENABLE_WRITES`) |
+| Shortcuts | none | `shortcuts_list`, `shortcuts_run`, `shortcuts_create` (`APPLE_MCP_ENABLE_SHORTCUTS`) |
 
 Example prompts:
 
@@ -36,8 +36,8 @@ Writes never touch the databases. They go through AppleScript, and checklist edi
 Requirements: macOS 13+, Python 3.11+, [uv](https://docs.astral.sh/uv/).
 
 ```bash
-git clone https://github.com/Jameshuff91/mac-personal-mcp.git
-cd mac-personal-mcp
+git clone https://github.com/Jameshuff91/apple-mcp.git
+cd apple-mcp
 uv sync
 ```
 
@@ -50,7 +50,7 @@ Grant permissions in **System Settings → Privacy & Security**:
 ### Claude Code
 
 ```bash
-claude mcp add mac-personal -- uv --directory /path/to/mac-personal-mcp run mac-personal-mcp
+claude mcp add apple -- uv --directory /path/to/apple-mcp run apple-mcp
 ```
 
 ### Claude Desktop (or other clients)
@@ -58,16 +58,16 @@ claude mcp add mac-personal -- uv --directory /path/to/mac-personal-mcp run mac-
 ```json
 {
   "mcpServers": {
-    "mac-personal": {
+    "apple": {
       "command": "uv",
-      "args": ["--directory", "/path/to/mac-personal-mcp", "run", "mac-personal-mcp"],
+      "args": ["--directory", "/path/to/apple-mcp", "run", "apple-mcp"],
       "env": {}
     }
   }
 }
 ```
 
-To enable an opt-in group, add it to `env`, e.g. `"MAC_MCP_ENABLE_WRITES": "1"`.
+To enable an opt-in group, add it to `env`, e.g. `"APPLE_MCP_ENABLE_WRITES": "1"`.
 
 ## Security
 
@@ -80,8 +80,8 @@ Anyone can send you an iMessage, and notes can be shared with you. If a message 
 The defaults are built to break that chain:
 
 1. **No outbound channel by default.** `imessage_send` and `shortcuts_run` are not even registered unless you set their flags. A model cannot call a tool that does not exist.
-2. **Send has its own flag.** `MAC_MCP_ENABLE_WRITES` does not enable sending. You must also set `MAC_MCP_ENABLE_SEND`.
-3. **Known recipients only.** Even when sending is enabled, it only works for people you already have a conversation with, unless you also set `MAC_MCP_ALLOW_NEW_RECIPIENTS`.
+2. **Send has its own flag.** `APPLE_MCP_ENABLE_WRITES` does not enable sending. You must also set `APPLE_MCP_ENABLE_SEND`.
+3. **Known recipients only.** Even when sending is enabled, it only works for people you already have a conversation with, unless you also set `APPLE_MCP_ALLOW_NEW_RECIPIENTS`.
 4. **Content is marked as untrusted.** Tool results that contain message, note, or contact text are wrapped in `<untrusted_content>` tags with an instruction not to follow anything inside. This helps but is **not** a guarantee; models can still be fooled.
 5. **Tool annotations.** Every tool declares MCP hints (`readOnlyHint`, `destructiveHint`, `openWorldHint`) so clients can prompt appropriately.
 6. **AI disclosure.** Sent messages end with `-sent with AI`.
@@ -96,17 +96,17 @@ Recommendations:
 
 - All SQLite access is read-only; the server never writes to Apple's databases.
 - AppleScript inputs are escaped (backslashes first, then quotes) to prevent script injection.
-- Your handle-to-name aliases are stored in `~/.config/mac-personal-mcp/aliases.json` (override with `MAC_MCP_CONFIG_DIR`), outside the repository, and are git-ignored if copied in.
+- Your handle-to-name aliases are stored in `~/.config/apple-mcp/aliases.json` (override with `APPLE_MCP_CONFIG_DIR`), outside the repository, and are git-ignored if copied in.
 
 ### Configuration reference
 
 | Variable | Default | Effect |
 |---|---|---|
-| `MAC_MCP_ENABLE_WRITES` | off | Notes and Contacts write tools, alias edits |
-| `MAC_MCP_ENABLE_SEND` | off | `imessage_send` |
-| `MAC_MCP_ALLOW_NEW_RECIPIENTS` | off | Let `imessage_send` reach people you have never messaged |
-| `MAC_MCP_ENABLE_SHORTCUTS` | off | List, run, and create Shortcuts |
-| `MAC_MCP_CONFIG_DIR` | `~/.config/mac-personal-mcp` | Where aliases are stored |
+| `APPLE_MCP_ENABLE_WRITES` | off | Notes and Contacts write tools, alias edits |
+| `APPLE_MCP_ENABLE_SEND` | off | `imessage_send` |
+| `APPLE_MCP_ALLOW_NEW_RECIPIENTS` | off | Let `imessage_send` reach people you have never messaged |
+| `APPLE_MCP_ENABLE_SHORTCUTS` | off | List, run, and create Shortcuts |
+| `APPLE_MCP_CONFIG_DIR` | `~/.config/apple-mcp` | Where aliases are stored |
 
 ## Limitations
 

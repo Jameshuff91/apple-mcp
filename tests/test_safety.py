@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from mac_personal_mcp import messages
-from mac_personal_mcp.utils import UNTRUSTED_NOTICE, applescript_string, wrap_untrusted
+from apple_mcp import messages
+from apple_mcp.utils import UNTRUSTED_NOTICE, applescript_string, wrap_untrusted
 
 READ_TOOLS = {
     "imessage_search",
@@ -83,11 +83,11 @@ def test_send_refuses_new_recipient(tmp_path: Path, monkeypatch: pytest.MonkeyPa
 def _registered_tools(env: dict[str, str]) -> set[str]:
     script = (
         "import asyncio, json\n"
-        "from mac_personal_mcp.server import mcp\n"
+        "from apple_mcp.server import mcp\n"
         "tools = asyncio.run(mcp.list_tools())\n"
         "print(json.dumps(sorted(t.name for t in tools)))\n"
     )
-    clean = {k: v for k, v in os.environ.items() if not k.startswith("MAC_MCP_")}
+    clean = {k: v for k, v in os.environ.items() if not k.startswith("APPLE_MCP_")}
     out = subprocess.run(
         [sys.executable, "-c", script],
         env={**clean, **env},
@@ -103,7 +103,7 @@ def test_default_registers_read_only_tools() -> None:
 
 
 def test_send_requires_its_own_flag() -> None:
-    writes_only = _registered_tools({"MAC_MCP_ENABLE_WRITES": "1"})
+    writes_only = _registered_tools({"APPLE_MCP_ENABLE_WRITES": "1"})
     assert "notes_create" in writes_only
     assert "imessage_send" not in writes_only
-    assert "imessage_send" in _registered_tools({"MAC_MCP_ENABLE_SEND": "1"})
+    assert "imessage_send" in _registered_tools({"APPLE_MCP_ENABLE_SEND": "1"})
