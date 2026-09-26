@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv
+.pytest_cache/
+
+# Never commit personal data
+aliases.json
+handle_aliases.json
+*.db
+*.sqlite
+*.abcddb
+*.shortcut
+.env
+.DS_Store
